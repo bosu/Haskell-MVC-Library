@@ -118,6 +118,7 @@ import qualified Data.Monoid as M
 import Pipes
 import Pipes.Concurrent
 import Pipes.Prelude (foldM)
+import qualified Pipes.Prelude as P
 import Data.Functor.Identity (Identity)
 
 import Prelude hiding ((.), id)
@@ -326,6 +327,9 @@ instance Monad m => Category (ModelM m s) where
     (AsPipe m1) . (AsPipe m2) = AsPipe (m1 <-< m2)
 
     id = AsPipe cat
+
+instance Monad m => Functor (ModelM m s a) where
+    fmap cb (AsPipe m) = AsPipe $ m >-> P.map cb
 
 {-| Create a `Model` from a `Pipe`
 
